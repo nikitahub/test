@@ -1,5 +1,4 @@
 window.addEventListener('DOMContentLoader', () => {
-
 const cartWrapper = document.querySelector('.cart__wrapper'),
     cart = document.querySelector('.cart'),
     close = document.querySelector('.cart__close'),
