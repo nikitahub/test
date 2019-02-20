@@ -1,4 +1,3 @@
-window.addEventListener('DOMContentLoader', () => {
 const cartWrapper = document.querySelector('.cart__wrapper'),
     cart = document.querySelector('.cart'),
     close = document.querySelector('.cart__close'),
@@ -28,6 +27,9 @@ goodsBtn.forEach(function(btn, i) {
 
         trigger.remove();
 
+        showConfig();
+        calcProduct(1);
+
         removeBtn.classList.add('goods__item-remove');
         removeBtn.innerHTML = '&times;';
         item.appendChild(removeBtn);
@@ -35,8 +37,67 @@ goodsBtn.forEach(function(btn, i) {
         cartWrapper.appendChild(item);
 
         if (empty) {
-            empty.remove();
+            empty.style.display = 'none';
         }
+        calcTotal();
+        removeFrom();
     });
 });
-});
+
+    function sliceTitle() {
+    titles.forEach(function(item) {
+        if (item.textContent.length < 70) {
+            return;
+        } else {
+            const str = item.textContent.slice(0, 71) + '...'; // от 0 до 70 символов
+            item.textContent = str;
+        }
+    });
+    }
+    sliceTitle();
+
+    function showConfig() {
+        confirm.style.display = 'block';
+        let counter = 100; //счетчик
+        const id = setInterval(frame, 10);
+    
+        function frame() {
+            if (counter == 10) {
+                clearInterval(id);
+                confirm.style.display = 'none';
+            } else {
+                counter--;
+                confirm.style.transform = `translateY(-${counter}px)`;
+                confirm.style.opacity = '.' + counter;
+            }
+        }
+    }
+
+    function calcProduct(i) {
+        const items = cartWrapper.querySelectorAll('.goods__item');
+        badge.textContent = i + items.length;
+    }
+
+    function calcTotal() {
+        const prices = document.querySelectorAll('.cart__wrapper > .goods__item > .goods__price > span'),
+              empty = cartWrapper.querySelector('.empty');
+        let total = 0;
+        prices.forEach(function(item) {
+            total += +item.textContent;
+        });
+        totalCost.textContent = total;
+        if (total == 0) {
+            empty.style.display = 'block';
+        }
+    }
+
+    function removeFrom() {
+        const removeBtn = cartWrapper.querySelectorAll('.goods__item-remove');
+        removeBtn.forEach(function(btn) {
+            btn.addEventListener('click', () => {
+                btn.parentElement.remove();
+                calcTotal();
+                calcProduct(0);
+            })
+        })
+    }
